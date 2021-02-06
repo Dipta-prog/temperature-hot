@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Temperature Hot</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background: url(images/bg-image.jpg) no-repeat;
+            background-size: cover;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <form class="col-md-6 m-auto py-5">
+            <div class="input-group mb-3">
+                <input id="cityNameInput" type="text" class="form-control"
+                    placeholder="Enter a location for Weather ...">
+                <div class="input-group-append">
+                    <button id="submit" type="button" class="btn btn-danger">Search</button>
+                </div>
+            </div>
+        </form>
+        <div class="weather-status text-white text-center">
+            <img id="weatherImg" src="https://openweathermap.org/img/wn/02d@2x.png" alt="">
+            <h1 id="cityName">Dhaka</h1>
+            <h3><span id="temperature">38.06</span>&deg;C</h3>
+            <h1 id="weatherCondition" class="lead">Clouds</h1>
+        </div>
+    </div>
+
+    <script>
+        //Event handler
+        document.getElementById("submit").addEventListener("click", function () {
+            let cityName = document.getElementById("cityNameInput").value;
+            if(cityName === "" || cityName === " ") document.getElementById("cityName").innerText = "Please Enter City Name";
+            else updateWeather(cityName);
+        })
+
+        //Takes input from user & calls api
+        function updateWeather(city) {
+            const key = "2f54cb431a3eb0f5d94c2d0c4aec2b77";
+            document.getElementById("cityName").innerText = city;
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${key}`)
+                .then(res => res.json())
+                .then(data => setWeatherInfo(data));
+        }
+
+        //Sets data to the website
+        function setWeatherInfo(data) {
+            document.getElementById("weatherImg").setAttribute('src', `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`);
+            document.getElementById("cityName").innerText = data.name;
+            document.getElementById("temperature").innerText = data.main.temp;
+            document.getElementById("weatherCondition").innerText = data.weather[0].main;
+            document.getElementById("cityNameInput").value = "";
+        }
+    </script>
+
+</body>
+
+</html>
